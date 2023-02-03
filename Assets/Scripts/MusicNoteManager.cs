@@ -21,7 +21,7 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     
     
     [Serializable]
-    private class NoteTimer
+    private class MusicNote
     {
         // [HideInInspector]
         public GameObject gameObject;
@@ -31,7 +31,7 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     }
 
     [Header("Core Map")]
-    [SerializeField] private List<NoteTimer> noteTimers;
+    [SerializeField] private List<MusicNote> musicNotes;
     
     private int currentSpawnIndex = 0, currentDestroyIndex = 0;
     
@@ -44,35 +44,56 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     void FixedUpdate()
     {
         
-        if (currentDestroyIndex >= noteTimers.Count)
+        if (currentDestroyIndex >= musicNotes.Count)
         {
             return;
         }
         
-        NoteTimer currentDestroyNote = noteTimers[currentDestroyIndex];
-        if (currentDestroyNote.correctTime + destroySpawnTime < timer.GetTimerValue())
+        MusicNote currentDestroyMusicNote = musicNotes[currentDestroyIndex];
+        if (currentDestroyMusicNote.correctTime + destroySpawnTime < timer.GetTimerValue())
         {
             
-            Destroy(currentDestroyNote.gameObject);
+            Destroy(currentDestroyMusicNote.gameObject);
             currentDestroyIndex++;
         }
      
         
-        if (currentSpawnIndex >= noteTimers.Count)
+        if (currentSpawnIndex >= musicNotes.Count)
         {
             return;
         }
         
-        NoteTimer currentSpawnNote = noteTimers[currentSpawnIndex];
-        if (currentSpawnNote.correctTime - preSpawnTime < timer.GetTimerValue())
+        MusicNote currentSpawnMusicNote = musicNotes[currentSpawnIndex];
+        if (currentSpawnMusicNote.correctTime - preSpawnTime < timer.GetTimerValue())
         {
-            noteTimers[currentSpawnIndex].gameObject = Instantiate(AssetManager.Instance.hitNodePrefab, currentSpawnNote.position, Quaternion.identity, transform);
+            musicNotes[currentSpawnIndex].gameObject = Instantiate(AssetManager.Instance.hitNodePrefab, currentSpawnMusicNote.position, Quaternion.identity, transform);
             currentSpawnIndex++;
         }
         
-
-
     }
 
-    
+
+    public bool CheckHitMusicNote(Collider2D [] hits)
+    {
+        if (hits == null) return false;
+
+        GameObject tobeCheckNoteTimer = musicNotes[currentDestroyIndex].gameObject;
+        foreach (var hit in hits)
+        {
+            if (tobeCheckNoteTimer == hit.gameObject)
+            {
+                OnHitMusicNote();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void OnHitMusicNote()
+    {
+        Destroy(musicNotes[currentDestroyIndex].gameObject);
+        Debug("Hit music note");
+    }
+        
 }

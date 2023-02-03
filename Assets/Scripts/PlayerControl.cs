@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,50 +15,86 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private GameObject blue1Attractor;
     [SerializeField] private GameObject blue2Attractor;
 
+    [Header("Checking Layer")] 
+    [SerializeField] private LayerMask blueNoteLayerMask;
+    [SerializeField] private LayerMask yellowNoteLayerMask;
+
+    
+    [Header("Circle Collider")] 
+    private CircleCollider2D yellowCollider;
+    private CircleCollider2D blue0Collider;
+    private CircleCollider2D blue1Collider;
+    private CircleCollider2D blue2Collider;
+
+
     [Header("Distance From Center")] 
-    [SerializeField] private Vector3 centerPosition;
-    [SerializeField] private Vector3 yellowInitPosition;
-    [SerializeField] private Vector3 blue0InitPosition;
-    [SerializeField] private Vector3 blue1InitPosition;
-    [SerializeField] private Vector3 blue2InitPosition;
+    private Vector3 centerPosition;
     [SerializeField] private float currentZAngleDegree;
     
     // Start is called before the first frame update
     void Start()
     {
         centerPosition = transform.position;
-        yellowInitPosition = yellowAttractor.transform.localPosition;
-        blue0InitPosition  = blue0Attractor.transform.localPosition;
-        blue1InitPosition  = blue1Attractor.transform.localPosition;
-        blue2InitPosition  = blue2Attractor.transform.localPosition;
         currentZAngleDegree = 0;
-    }
+    
+        yellowCollider = yellowAttractor.GetComponent<CircleCollider2D>();
+        blue0Collider = blue0Attractor.GetComponent<CircleCollider2D>();
+        blue1Collider = blue1Attractor.GetComponent<CircleCollider2D>();
+        blue2Collider = blue2Attractor.GetComponent<CircleCollider2D>();
 
-    // Update is called once per frame
-    void FixedUpdate()
+    }
+    
+
+
+    private void Update()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        
         mousePosition.z = (transform.position - centerPosition).z;
+
+        MousePointerMovement(mousePosition);
+
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.C) )
+        {
+            OnYellowClick();
+        }
+
+        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.X))
+        {
+            OnBlueClick();
+        }
+        
+    }
+
+    private void MousePointerMovement(Vector3 mousePosition)
+    {
+       
         float deltaAngle = Vector3.SignedAngle((yellowAttractor.transform.position - centerPosition).normalized , (mousePosition - centerPosition).normalized  , Vector3.forward);
         
-        Debug.Log(mousePosition);
+        
         currentZAngleDegree += deltaAngle;
         currentZAngleDegree = currentZAngleDegree > 180 ? currentZAngleDegree - 360 : currentZAngleDegree < 180 ? currentZAngleDegree + 360 : currentZAngleDegree;
-
-        float rangeFaction = (yellowAttractor.transform.position - centerPosition).magnitude /
-                             (yellowInitPosition - centerPosition).magnitude;
         
+        float x = mousePosition.x;
+        float y = mousePosition.y;
         
-        float yellowRange = (yellowAttractor.transform.position - centerPosition).magnitude;
-        float xYellow = yellowRange * Mathf.Cos(currentZAngleDegree * Mathf.Deg2Rad) + centerPosition.x;
-        float yYellow = yellowRange * Mathf.Sin(currentZAngleDegree * Mathf.Deg2Rad) + centerPosition.y;
-
         transform.rotation = Quaternion.Euler(0,0, currentZAngleDegree);
-        yellowAttractor.transform.position = new Vector3(xYellow, yYellow, 0);
-
-        blueCluster.transform.position = new Vector3(-xYellow, -yYellow, 0);
-        
+        yellowAttractor.transform.position = new Vector3(x, y, 0);
+        blueCluster.transform.position = new Vector3(-x, -y, 0);
 
     }
+
+    private void OnYellowClick()
+    {
+        Collider2D [] hits= Physics2D.OverlapCircleAll(yellowAttractor.transform.position, yellowCollider.radius, yellowNoteLayerMask);
+        
+        MusicNoteManager.Instance.CheckHitMusicNote(hits);
+        
+    }
+    
+    
+    private void OnBlueClick()
+    {
+        
+    }
+    
 }
