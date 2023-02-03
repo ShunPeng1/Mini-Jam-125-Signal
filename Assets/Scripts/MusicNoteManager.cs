@@ -54,7 +54,7 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
             currentSpawnIndex++;
         }
         
-        if (currentDestroyNote.correctTime - destroySpawnTime < timer.GetTimerValue())
+        if (currentDestroyNote.correctTime + destroySpawnTime < timer.GetTimerValue())
         {
             Destroy(currentDestroyNote.gameObject);
             currentDestroyIndex++;
