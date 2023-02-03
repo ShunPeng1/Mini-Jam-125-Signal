@@ -5,8 +5,12 @@ using UnityEngine;
 
 public class HitNote : MonoBehaviour
 {
+    
     private void OnMouseDown()
     {
         
     }
+    
+    
+    
 }

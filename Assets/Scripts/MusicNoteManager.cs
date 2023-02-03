@@ -23,7 +23,8 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     [Serializable]
     private class NoteTimer
     {
-        [HideInInspector] public GameObject gameObject;
+        // [HideInInspector]
+        public GameObject gameObject;
         public Vector3 position;
         public float correctTime;
         public float beat;
@@ -32,7 +33,7 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     [Header("Core Map")]
     [SerializeField] private List<NoteTimer> noteTimers;
     
-    private int currentSpawnIndex, currentDestroyIndex;
+    private int currentSpawnIndex = 0, currentDestroyIndex = 0;
     
     void Start()
     {
@@ -42,23 +43,33 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     // Update is called once per frame
     void FixedUpdate()
     {
+        
+        if (currentDestroyIndex >= noteTimers.Count)
+        {
+            return;
+        }
+        
+        NoteTimer currentDestroyNote = noteTimers[currentDestroyIndex];
+        if (currentDestroyNote.correctTime + destroySpawnTime < timer.GetTimerValue())
+        {
+            
+            Destroy(currentDestroyNote.gameObject);
+            currentDestroyIndex++;
+        }
+     
+        
         if (currentSpawnIndex >= noteTimers.Count)
         {
             return;
         }
-
-        NoteTimer currentSpawnNote = noteTimers[currentDestroyIndex], currentDestroyNote = noteTimers[currentDestroyIndex];
+        
+        NoteTimer currentSpawnNote = noteTimers[currentSpawnIndex];
         if (currentSpawnNote.correctTime - preSpawnTime < timer.GetTimerValue())
         {
-            noteTimers[currentDestroyIndex].gameObject= Instantiate(AssetManager.Instance.hitNodePrefab, currentSpawnNote.position, Quaternion.identity, transform);
+            noteTimers[currentSpawnIndex].gameObject = Instantiate(AssetManager.Instance.hitNodePrefab, currentSpawnNote.position, Quaternion.identity, transform);
             currentSpawnIndex++;
         }
         
-        if (currentDestroyNote.correctTime + destroySpawnTime < timer.GetTimerValue())
-        {
-            Destroy(currentDestroyNote.gameObject);
-            currentDestroyIndex++;
-        }
 
 
     }
