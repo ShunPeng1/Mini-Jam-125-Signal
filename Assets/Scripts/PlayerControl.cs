@@ -106,7 +106,8 @@ public class PlayerControl : MonoBehaviour
     {
         //Debug.Log("right Click ");
         Collider2D [] hits= Physics2D.OverlapCircleAll(yellowAttractor.transform.position, yellowCollider.radius, yellowNoteLayerMask);
-        Debug.Log(hits.ToString());
+        Debug.Log( yellowAttractor.transform.position +" "+ yellowCollider.radius.ToString()+ " "+ hits.ToString());
+       
         //MusicNoteManager.Instance.CheckHitMusicNote(hits);
         
     }
