@@ -343,11 +343,12 @@ MonoBehaviour:
   blue0Attractor: {fileID: 1682274376}
   blue1Attractor: {fileID: 947082845}
   blue2Attractor: {fileID: 503244760}
-  centerPosition: {x: 0, y: 0, z: 0}
-  yellowInitPosition: {x: 0, y: 0, z: 0}
-  blue0InitPosition: {x: 0, y: 0, z: 0}
-  blue1InitPosition: {x: 0, y: 0, z: 0}
-  blue2InitPosition: {x: 0, y: 0, z: 0}
+  blueNoteLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  yellowNoteLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   currentZAngleDegree: 0
 --- !u!1 &282698372
 GameObject:
@@ -390,6 +391,7 @@ GameObject:
   m_Component:
   - component: {fileID: 503244762}
   - component: {fileID: 503244761}
+  - component: {fileID: 503244763}
   m_Layer: 0
   m_Name: Blue2Attracter
   m_TagString: Untagged
@@ -457,13 +459,29 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 503244760}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.866, y: -1, z: 0}
+  m_LocalPosition: {x: -0.866, y: -1, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1162822735}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &503244763
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 503244760}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -806,6 +824,7 @@ GameObject:
   m_Component:
   - component: {fileID: 947082847}
   - component: {fileID: 947082846}
+  - component: {fileID: 947082848}
   m_Layer: 0
   m_Name: Blue1Attracter
   m_TagString: Untagged
@@ -873,13 +892,29 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 947082845}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.866, y: 1, z: 0}
+  m_LocalPosition: {x: -0.866, y: 1, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1162822735}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &947082848
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 947082845}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &1053081434
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,6 +925,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1053081435}
   - component: {fileID: 1053081436}
+  - component: {fileID: 1053081437}
   m_Layer: 0
   m_Name: YellowAttracter
   m_TagString: Untagged
@@ -906,7 +942,7 @@ Transform:
   m_GameObject: {fileID: 1053081434}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 5, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 276987112}
@@ -964,6 +1000,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &1053081437
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1053081434}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &1162822734
 GameObject:
   m_ObjectHideFlags: 0
@@ -1093,18 +1145,22 @@ MonoBehaviour:
   deltaAccuracyTime: 0
   preSpawnTime: 2
   destroySpawnTime: 2
-  noteTimers:
+  musicNotes:
   - gameObject: {fileID: 0}
     position: {x: 0, y: 0, z: 0}
     correctTime: 0
     beat: 0
   - gameObject: {fileID: 0}
-    position: {x: 4, y: -3, z: 0}
+    position: {x: -4, y: -4, z: 0}
     correctTime: 0.5
     beat: 0
   - gameObject: {fileID: 0}
-    position: {x: -3, y: -4, z: 0}
+    position: {x: 4, y: 4, z: 0}
     correctTime: 1
+    beat: 0
+  - gameObject: {fileID: 0}
+    position: {x: -4, y: 4, z: 0}
+    correctTime: 1.5
     beat: 0
 --- !u!1 &1682274376
 GameObject:
@@ -1116,6 +1172,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1682274377}
   - component: {fileID: 1682274378}
+  - component: {fileID: 1682274379}
   m_Layer: 0
   m_Name: Blue0Attracter
   m_TagString: Untagged
@@ -1131,7 +1188,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1682274376}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1, y: 0, z: 0}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1190,3 +1247,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!58 &1682274379
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1682274376}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5

@@ -75,7 +75,7 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
 
     public bool CheckHitMusicNote(Collider2D [] hits)
     {
-        if (hits == null) return false;
+        if (hits == null || currentDestroyIndex >= musicNotes.Count) return false;
 
         GameObject tobeCheckNoteTimer = musicNotes[currentDestroyIndex].gameObject;
         foreach (var hit in hits)
@@ -93,7 +93,7 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     private void OnHitMusicNote()
     {
         Destroy(musicNotes[currentDestroyIndex].gameObject);
-        Debug("Hit music note");
+        Debug.Log("Hit music note");
     }
         
 }

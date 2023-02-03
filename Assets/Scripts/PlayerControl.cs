@@ -14,17 +14,21 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private GameObject blue0Attractor;
     [SerializeField] private GameObject blue1Attractor;
     [SerializeField] private GameObject blue2Attractor;
-
-    [Header("Checking Layer")] 
-    [SerializeField] private LayerMask blueNoteLayerMask;
-    [SerializeField] private LayerMask yellowNoteLayerMask;
-
     
     [Header("Circle Collider")] 
     private CircleCollider2D yellowCollider;
     private CircleCollider2D blue0Collider;
     private CircleCollider2D blue1Collider;
     private CircleCollider2D blue2Collider;
+
+    [Header("Rigidbody")]
+    private Rigidbody2D yellowRigidbody;
+    private Rigidbody2D blueClusterRigidbody;
+    
+    [Header("Checking Layer")] 
+    [SerializeField] private LayerMask yellowNoteLayerMask;
+    [SerializeField] private LayerMask blueNoteLayerMask;
+
 
 
     [Header("Distance From Center")] 
@@ -36,17 +40,24 @@ public class PlayerControl : MonoBehaviour
     {
         centerPosition = transform.position;
         currentZAngleDegree = 0;
-    
+        InitGetAttractorsComponent();
+    }
+
+    void InitGetAttractorsComponent()
+    {
+        
         yellowCollider = yellowAttractor.GetComponent<CircleCollider2D>();
         blue0Collider = blue0Attractor.GetComponent<CircleCollider2D>();
         blue1Collider = blue1Attractor.GetComponent<CircleCollider2D>();
         blue2Collider = blue2Attractor.GetComponent<CircleCollider2D>();
 
+        
+        yellowRigidbody = yellowAttractor.GetComponent<Rigidbody2D>();
+        blueClusterRigidbody = blueCluster.GetComponent<Rigidbody2D>();
+
     }
-    
 
-
-    private void Update()
+    private void FixedUpdate()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = (transform.position - centerPosition).z;
@@ -77,21 +88,29 @@ public class PlayerControl : MonoBehaviour
         float x = mousePosition.x;
         float y = mousePosition.y;
         
-        transform.rotation = Quaternion.Euler(0,0, currentZAngleDegree);
-        yellowAttractor.transform.position = new Vector3(x, y, 0);
-        blueCluster.transform.position = new Vector3(-x, -y, 0);
+        
+        //transform.rotation = Quaternion.Euler(0,0, currentZAngleDegree);
 
+        //yellowAttractor.transform.position = new Vector3(x, y, 0);
+        //blueCluster.transform.position = new Vector3(-x, -y, 0);
+
+        yellowRigidbody.MovePosition(new Vector3(x, y, 0));
+        yellowRigidbody.MoveRotation(currentZAngleDegree);
+        
+        blueClusterRigidbody.MovePosition(new Vector3(-x, -y, 0));
+        blueClusterRigidbody.MoveRotation(currentZAngleDegree + 180f);
+        
     }
 
     private void OnYellowClick()
     {
+        //Debug.Log("right Click ");
         Collider2D [] hits= Physics2D.OverlapCircleAll(yellowAttractor.transform.position, yellowCollider.radius, yellowNoteLayerMask);
-        
-        MusicNoteManager.Instance.CheckHitMusicNote(hits);
+        Debug.Log(hits.ToString());
+        //MusicNoteManager.Instance.CheckHitMusicNote(hits);
         
     }
-    
-    
+
     private void OnBlueClick()
     {
         

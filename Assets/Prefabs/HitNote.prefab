@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4916294654677215292}
   - component: {fileID: 9076375665731599719}
   - component: {fileID: 6791039309307241398}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: HitNote
   m_TagString: Untagged
   m_Icon: {fileID: 0}
