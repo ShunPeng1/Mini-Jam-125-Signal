@@ -143,9 +143,10 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     }
 
 
-    public bool CheckHitYellowMusicNote(Collider2D [] hits , Vector3 hitPosition)
+    public void CheckHitYellowMusicNote(Collider2D [] hits , Vector3 hitPosition)
     {
-        if (hits == null || currentDestroyIndex >= yellowMusicNotes.Count) return false;
+        if (currentDestroyIndex >= yellowMusicNotes.Count) return;
+        
 
         GameObject tobeCheckNoteTimer = yellowMusicNotes[currentDestroyIndex].gameObject;
         while (tobeCheckNoteTimer.gameObject == null)
@@ -177,6 +178,7 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
             if ( hitOffsetPercentage < scoreHitValue.timeOffsetPercentage)
             {
                 Instantiate(scoreHitValue.prefabs, hit.position, Quaternion.identity, transform);
+                break;
             }
         }
         
