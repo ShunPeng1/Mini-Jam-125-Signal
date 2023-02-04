@@ -388,7 +388,7 @@ MonoBehaviour:
   blueNoteLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  currentZAngleDegree: 0
+  mouseSensitivity: 0.65
 --- !u!1 &282698372
 GameObject:
   m_ObjectHideFlags: 0
@@ -925,7 +925,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -1763,7 +1763,7 @@ MonoBehaviour:
   initWaitTime: 3
   endWaitTime: 0
   deltaAccuracyTime: 0
-  preSpawnTime: 1.5
+  preSpawnTime: 3
   destroySpawnTime: 0.25
   musicNotes:
   - gameObject: {fileID: 1817334610}
@@ -1773,12 +1773,12 @@ MonoBehaviour:
     correctTime: 0
   - gameObject: {fileID: 626373902}
     noteDuration: 3
-    noteType: 0
+    noteType: 2
     position: {x: 0, y: 0, z: 0}
     correctTime: 0
   - gameObject: {fileID: 244444717}
     noteDuration: 3
-    noteType: 0
+    noteType: 2
     position: {x: 0, y: 0, z: 0}
     correctTime: 0
   - gameObject: {fileID: 471065344}
@@ -2287,9 +2287,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 946c0a34555a28e438f5da3cf715cd1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartObject: {fileID: 3070743853699476172}
+  StartObject: {fileID: 0}
   StartPosition: {x: 0, y: 0, z: 0}
-  EndObject: {fileID: 1053081434}
+  EndObject: {fileID: 0}
   EndPosition: {x: 0, y: 0, z: 0}
   Generations: 6
   Duration: 0.03

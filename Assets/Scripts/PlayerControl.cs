@@ -19,41 +19,41 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float blueRadius;
     
     
-    [Header("Rigidbody")]
-    private Rigidbody2D yellowRigidbody;
-    private Rigidbody2D blueAttractorRigidbody;
-    
     [Header("Checking Layer")] 
     [SerializeField] private LayerMask yellowNoteLayerMask;
     [SerializeField] private LayerMask blueNoteLayerMask;
-
-
     
-    [Header("Distance From Center")] 
+    
+    [Header("Mouse")] 
+    [SerializeField, Range(0.01f, 2f)]private float mouseSensitivity = 1f;
+
+    [Header("Distance From Center")]
     private Vector3 centerPosition;
-    [SerializeField] private float currentZAngleDegree;
-    
+    private float currentZAngleDegree;
+    private Vector3 mousePosition;
+
     // Start is called before the first frame update
     void Start()
     {
         centerPosition = transform.position;
         currentZAngleDegree = 0;
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        
         InitGetAttractorsComponent();
     }
 
     void InitGetAttractorsComponent()
     {
-        yellowRigidbody = currentAttractor.GetComponent<Rigidbody2D>();
-        blueAttractorRigidbody = waitAttractor.GetComponent<Rigidbody2D>();
     }
     
 
     private void Update()
     {
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition.z = (transform.position - centerPosition).z;
+       
 
-        MousePointerMovement(mousePosition);
+        MousePointerMovement();
         
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.X) )
         {
@@ -62,11 +62,18 @@ public class PlayerControl : MonoBehaviour
 
         
     }
-
     
-    private void MousePointerMovement(Vector3 mousePosition)
+    private void MousePointerMovement()
     {
+        
        
+        Debug.Log(Input.GetAxis("Mouse X").ToString()+" " + Input.GetAxis("Mouse Y").ToString());
+        
+        //mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        mousePosition += new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0) * mouseSensitivity;
+        
+        mousePosition.z = (transform.position - centerPosition).z;
         float deltaAngle = Vector3.SignedAngle((currentAttractor.transform.position - centerPosition).normalized , (mousePosition - centerPosition).normalized  , Vector3.forward);
         
         
@@ -103,6 +110,7 @@ public class PlayerControl : MonoBehaviour
     public void OnSwitchAttractor()
     {
         (currentAttractor, waitAttractor) = (waitAttractor, currentAttractor);
+        mousePosition = currentAttractor.transform.position;
     }
 
     void OnDrawGizmos()
