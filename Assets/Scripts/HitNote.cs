@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class HitNote : MonoBehaviour
 {
+    private void OnAcceptScore()
+    {
+        
+    }
+    
     private void OnEnable()
     {
         throw new NotImplementedException();

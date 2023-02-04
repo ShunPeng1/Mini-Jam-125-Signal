@@ -101,10 +101,10 @@ public class PlayerControl : MonoBehaviour
 
     private void OnYellowClick()
     {
-        Collider2D [] hits= Physics2D.OverlapCircleAll(yellowAttractor.transform.position, yellowRadius, yellowNoteLayerMask);
+        var position = yellowAttractor.transform.position;
+        Collider2D [] hits= Physics2D.OverlapCircleAll(position, yellowRadius, yellowNoteLayerMask);
         
-        
-        MusicNoteManager.Instance.CheckHitYellowMusicNote(hits);
+        MusicNoteManager.Instance.CheckHitYellowMusicNote(hits, position);
         
     }
 

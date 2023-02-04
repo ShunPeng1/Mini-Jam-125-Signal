@@ -50,9 +50,18 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
         [HideInInspector] public float correctTime;
     }
 
+    [Serializable]
+    private class ScoreHitValue
+    {
+        public GameObject prefabs;
+        public float timeOffsetPercentage;
+        public float value;
+    }
+
     [Header("Core Map")]
     [SerializeField] private List<MusicNote> yellowMusicNotes;
-    
+    [SerializeField] private List<ScoreHitValue> scoreHitValues;
+
     private int currentSpawnIndex = 0, currentDestroyIndex = 0;
     
     void Start()
@@ -62,6 +71,7 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     }
 
 
+    
     private void InitDecodeMusicNote()
     {
         float nextBeatCorrectTime = 0f;
@@ -133,29 +143,50 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     }
 
 
-    public bool CheckHitYellowMusicNote(Collider2D [] hits)
+    public bool CheckHitYellowMusicNote(Collider2D [] hits , Vector3 hitPosition)
     {
         if (hits == null || currentDestroyIndex >= yellowMusicNotes.Count) return false;
 
         GameObject tobeCheckNoteTimer = yellowMusicNotes[currentDestroyIndex].gameObject;
+        while (tobeCheckNoteTimer.gameObject == null)
+        {
+            currentDestroyIndex++;
+        }
+        
         foreach (var hit in hits)
         {
-            if (tobeCheckNoteTimer == hit.gameObject)
-            {
-                OnHitMusicNote();
-                return true;
-            }
+            if (tobeCheckNoteTimer != hit.gameObject) continue;
+            OnHitMusicNote(yellowMusicNotes[currentDestroyIndex]);
+            
+            return true;
         }
         
         return false;
     }
 
-    private void OnHitMusicNote()
+    private void OnHitMusicNote(MusicNote hit)
     {
-        if(yellowMusicNotes[currentDestroyIndex].gameObject != null) yellowMusicNotes[currentDestroyIndex].gameObject.SetActive(false);
-        //Destroy(yellowMusicNotes[currentDestroyIndex].gameObject);
-        currentDestroyIndex++;
-        Debug.Log("Hit music note");
-    }
         
+        if(yellowMusicNotes[currentDestroyIndex].gameObject != null) yellowMusicNotes[currentDestroyIndex].gameObject.SetActive(false);
+        
+        // Score Popup
+        float hitOffsetPercentage = Mathf.Abs( (float)(hit.correctTime - timer.GetTimerValue()) ) / (preSpawnTime + destroySpawnTime); 
+
+        foreach (var scoreHitValue in scoreHitValues)
+        {
+            if ( hitOffsetPercentage < scoreHitValue.timeOffsetPercentage)
+            {
+                Instantiate(scoreHitValue.prefabs, hit.position, Quaternion.identity, transform);
+            }
+        }
+        
+        currentDestroyIndex++;
+    }
+
+    private void OnMissMusicNote()
+    {
+        
+    }    
+    
+    
 }

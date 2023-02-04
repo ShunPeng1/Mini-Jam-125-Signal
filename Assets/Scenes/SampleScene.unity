@@ -1752,6 +1752,19 @@ MonoBehaviour:
     noteType: 2
     position: {x: 0, y: 0, z: 0}
     correctTime: 0
+  scoreHitValues:
+  - prefabs: {fileID: 1545341821013576683, guid: 5b35d52a2f72e8546a2baa7f9ddc9583, type: 3}
+    timeOffsetPercentage: 0.3
+    value: 100
+  - prefabs: {fileID: 6042573133960367631, guid: 3e704920a3084034988440cc6710787d, type: 3}
+    timeOffsetPercentage: 0.6
+    value: 50
+  - prefabs: {fileID: 2835980663242257673, guid: dd932f84dd806eb45905ef1a9bd93979, type: 3}
+    timeOffsetPercentage: 1
+    value: 20
+  - prefabs: {fileID: 2835980663242257673, guid: dd932f84dd806eb45905ef1a9bd93979, type: 3}
+    timeOffsetPercentage: 1e+15
+    value: 0
 --- !u!1001 &1554966569
 PrefabInstance:
   m_ObjectHideFlags: 0
