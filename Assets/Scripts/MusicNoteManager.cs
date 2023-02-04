@@ -116,7 +116,7 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
         MusicNote currentDestroyMusicNote = yellowMusicNotes[currentDestroyIndex];
         if (currentDestroyMusicNote.correctTime + destroySpawnTime < timer.GetTimerValue())
         {
-            yellowMusicNotes[currentDestroyIndex].gameObject.SetActive(true);
+            yellowMusicNotes[currentDestroyIndex].gameObject.SetActive(false);
             //Destroy(currentDestroyMusicNote.gameObject);
             currentDestroyIndex++;
         }
