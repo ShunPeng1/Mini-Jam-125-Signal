@@ -4,16 +4,15 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
+
 public class PlayerControl : MonoBehaviour
 {
     
     [Header("Attractor")] 
-    [SerializeField] private GameObject yellowAttractor;
-    [SerializeField] private GameObject blueCluster;
-    [SerializeField] private GameObject blue0Attractor;
-    [SerializeField] private GameObject blue1Attractor;
-    [SerializeField] private GameObject blue2Attractor;
-    
+    [SerializeField] private GameObject currentAttractor;
+    [SerializeField] private GameObject waitAttractor;
+
 
     [Header("Collider Radius")]
     [SerializeField] private float yellowRadius;
@@ -22,14 +21,14 @@ public class PlayerControl : MonoBehaviour
     
     [Header("Rigidbody")]
     private Rigidbody2D yellowRigidbody;
-    private Rigidbody2D blueClusterRigidbody;
+    private Rigidbody2D blueAttractorRigidbody;
     
     [Header("Checking Layer")] 
     [SerializeField] private LayerMask yellowNoteLayerMask;
     [SerializeField] private LayerMask blueNoteLayerMask;
 
 
-
+    
     [Header("Distance From Center")] 
     private Vector3 centerPosition;
     [SerializeField] private float currentZAngleDegree;
@@ -44,16 +43,10 @@ public class PlayerControl : MonoBehaviour
 
     void InitGetAttractorsComponent()
     {
-        yellowRigidbody = yellowAttractor.GetComponent<Rigidbody2D>();
-        blueClusterRigidbody = blueCluster.GetComponent<Rigidbody2D>();
-
+        yellowRigidbody = currentAttractor.GetComponent<Rigidbody2D>();
+        blueAttractorRigidbody = waitAttractor.GetComponent<Rigidbody2D>();
     }
-
-    private void FixedUpdate()
-    {
-        
-        
-    }
+    
 
     private void Update()
     {
@@ -64,19 +57,17 @@ public class PlayerControl : MonoBehaviour
         
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.X) )
         {
-            OnYellowClick();
+            OnClickForHit();
         }
 
-        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.C))
-        {
-            OnBlueClick();
-        }
+        
     }
 
+    
     private void MousePointerMovement(Vector3 mousePosition)
     {
        
-        float deltaAngle = Vector3.SignedAngle((yellowAttractor.transform.position - centerPosition).normalized , (mousePosition - centerPosition).normalized  , Vector3.forward);
+        float deltaAngle = Vector3.SignedAngle((currentAttractor.transform.position - centerPosition).normalized , (mousePosition - centerPosition).normalized  , Vector3.forward);
         
         
         currentZAngleDegree += deltaAngle;
@@ -86,11 +77,11 @@ public class PlayerControl : MonoBehaviour
         float y = mousePosition.y;
 
 
-        yellowAttractor.transform.position = new Vector3(x, y, 0);
-        yellowAttractor.transform.rotation = Quaternion.Euler(0, 0, currentZAngleDegree);
+        currentAttractor.transform.position = new Vector3(x, y, 0);
+        currentAttractor.transform.rotation = Quaternion.Euler(0, 0, currentZAngleDegree);
         
-        blueCluster.transform.position = new Vector3(-x, -y, 0);
-        blueCluster.transform.rotation = Quaternion.Euler(0, 0,180f+ currentZAngleDegree);
+        waitAttractor.transform.position = new Vector3(-x, -y, 0);
+        waitAttractor.transform.rotation = Quaternion.Euler(0, 0,180f+ currentZAngleDegree);
 
         //yellowRigidbody.MovePosition(new Vector3(x, y, 0));
         //yellowRigidbody.MoveRotation(currentZAngleDegree);
@@ -100,26 +91,24 @@ public class PlayerControl : MonoBehaviour
         
     }
 
-    private void OnYellowClick()
+    private void OnClickForHit()
     {
-        var position = yellowAttractor.transform.position;
+        var position = currentAttractor.transform.position;
         Collider2D [] hits= Physics2D.OverlapCircleAll(position, yellowRadius, yellowNoteLayerMask);
         
-        MusicNoteManager.Instance.CheckHitYellowMusicNote(hits, position);
+        MusicNoteManager.Instance.CheckHitYellowMusicNote(hits, currentAttractor);
         
     }
 
-    private void OnBlueClick()
+    public void OnSwitchAttractor()
     {
-        
+        (currentAttractor, waitAttractor) = (waitAttractor, currentAttractor);
     }
 
     void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(yellowAttractor.transform.position, yellowRadius);
-        Gizmos.DrawWireSphere(blue0Attractor.transform.position, blueRadius);
-        Gizmos.DrawWireSphere(blue1Attractor.transform.position, blueRadius);
-        Gizmos.DrawWireSphere(blue2Attractor.transform.position, blueRadius);
+        Gizmos.DrawWireSphere(currentAttractor.transform.position, yellowRadius);
+        Gizmos.DrawWireSphere(waitAttractor.transform.position, blueRadius);
     }
 
 }

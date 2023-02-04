@@ -6,14 +6,14 @@ using UnityEngine;
 using UnityUtilities;
 
 
-public enum NoteColor
+public enum NoteType
 {
     Yellow,
     Blue,
-    Silence
+    Switch
 }
 
-public enum NoteType
+public enum NoteDuration
 {
     WholeNote,
     HalfNote,
@@ -25,9 +25,11 @@ public enum NoteType
 
 public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
 {
-    
+    [Header("Require Object")]
     [SerializeField] private Timer timer;
-
+    [SerializeField] private PlayerControl player;
+    [SerializeField] private TeslaCoilManager teslaCoilManager;
+    
     [Header("Timer")] 
     [SerializeField] private int bpm = 100;
     [SerializeField] private int tempo = 4;
@@ -44,7 +46,8 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     private class MusicNote
     {
         public GameObject gameObject;
-        public NoteType noteType;   
+        public NoteDuration noteDuration;
+        public NoteType noteType;
         
         [HideInInspector] public Vector3 position;
         [HideInInspector] public float correctTime;
@@ -59,7 +62,7 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     }
 
     [Header("Core Map")]
-    [SerializeField] private List<MusicNote> yellowMusicNotes;
+    [SerializeField] private List<MusicNote> musicNotes;
     [SerializeField] private List<ScoreHitValue> scoreHitValues;
 
     private int currentSpawnIndex = 0, currentDestroyIndex = 0;
@@ -75,14 +78,14 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     private void InitDecodeMusicNote()
     {
         float nextBeatCorrectTime = 0f;
-        foreach (var musicNote in yellowMusicNotes)
+        foreach (var musicNote in musicNotes)
         {
             if (gameObject)
             {
                 musicNote.position = musicNote.gameObject.transform.position;
             }
             
-            float duration = DurationFromNoteType(musicNote.noteType);
+            float duration = DurationFromNoteType(musicNote.noteDuration);
 
             musicNote.correctTime = nextBeatCorrectTime;
             nextBeatCorrectTime += duration;
@@ -91,26 +94,26 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
         
     }
 
-    private float DurationFromNoteType(NoteType noteType)
+    private float DurationFromNoteType(NoteDuration noteDuration)
     {
         float beatSecond = (float) bpm /  60f;
         
-        switch (noteType)
+        switch (noteDuration)
         {
-            case NoteType.WholeNote:
+            case NoteDuration.WholeNote:
                 return beatSecond / (float)tempo;
                 
-            case NoteType.HalfNote:
+            case NoteDuration.HalfNote:
                 return 0.5f * beatSecond / (float)tempo;
 
-            case NoteType.QuarterNote:
+            case NoteDuration.QuarterNote:
                 return 0.25f * beatSecond / (float)tempo;
             
-            case NoteType.EightNote:
+            case NoteDuration.EightNote:
                 return 0.125f *beatSecond / (float)tempo;
             
             default:
-                throw new ArgumentOutOfRangeException(nameof(noteType), noteType, null);
+                throw new ArgumentOutOfRangeException(nameof(noteDuration), noteDuration, null);
         }
     }
 
@@ -118,10 +121,10 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     void FixedUpdate()
     {
         
-        while (currentDestroyIndex < yellowMusicNotes.Count &&  yellowMusicNotes[currentDestroyIndex].correctTime + destroySpawnTime < timer.GetTimerValue())
+        while (currentDestroyIndex < musicNotes.Count &&  musicNotes[currentDestroyIndex].correctTime + destroySpawnTime < timer.GetTimerValue())
         {
             //Debug.Log("DESPAWN");
-            MusicNote currentDestroyMusicNote = yellowMusicNotes[currentDestroyIndex];
+            MusicNote currentDestroyMusicNote = musicNotes[currentDestroyIndex];
 
             if(currentDestroyMusicNote.gameObject != null) currentDestroyMusicNote.gameObject.SetActive(false);
             //Destroy(currentDestroyMusicNote.gameObject);
@@ -129,10 +132,10 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
             
         }
         
-        while (currentSpawnIndex < yellowMusicNotes.Count &&  yellowMusicNotes[currentSpawnIndex].correctTime - preSpawnTime < timer.GetTimerValue())
+        while (currentSpawnIndex < musicNotes.Count &&  musicNotes[currentSpawnIndex].correctTime - preSpawnTime < timer.GetTimerValue())
         {
             //Debug.Log("SPAWN");
-            MusicNote currentSpawnMusicNote = yellowMusicNotes[currentSpawnIndex];
+            MusicNote currentSpawnMusicNote = musicNotes[currentSpawnIndex];
 
             if(currentSpawnMusicNote.gameObject != null) currentSpawnMusicNote.gameObject.SetActive(true);
             //Destroy(currentDestroyMusicNote.gameObject);
@@ -143,36 +146,42 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     }
 
 
-    public void CheckHitYellowMusicNote(Collider2D [] hits , Vector3 hitPosition)
+    public void CheckHitYellowMusicNote(Collider2D [] hits , GameObject attractor)
     {
-        if (currentDestroyIndex >= yellowMusicNotes.Count) return;
+        if (currentDestroyIndex >= musicNotes.Count) return;
         
-        GameObject tobeCheckNoteTimer = yellowMusicNotes[currentDestroyIndex].gameObject;
-        while ( currentDestroyIndex < yellowMusicNotes.Count &&  tobeCheckNoteTimer.gameObject == null)
+        GameObject tobeCheckNoteTimer = musicNotes[currentDestroyIndex].gameObject;
+        while ( currentDestroyIndex < musicNotes.Count &&  tobeCheckNoteTimer.gameObject == null)
         {
             currentDestroyIndex++;
-            tobeCheckNoteTimer = yellowMusicNotes[currentDestroyIndex].gameObject;
+            tobeCheckNoteTimer = musicNotes[currentDestroyIndex].gameObject;
         }
         
-        if (currentDestroyIndex >= yellowMusicNotes.Count) return;
+        if (currentDestroyIndex >= musicNotes.Count) return;
         
         
         foreach (var hit in hits)
         {
             if (tobeCheckNoteTimer != hit.gameObject) continue;
             
-            OnHitMusicNote(yellowMusicNotes[currentDestroyIndex]);
+            OnHitMusicNote(musicNotes[currentDestroyIndex]);
             return;
         }
         
-        OnMissMusicNote(hitPosition);
+        OnMissMusicNote(attractor);
         
     }
 
     private void OnHitMusicNote(MusicNote hit)
     {
         
-        if(yellowMusicNotes[currentDestroyIndex].gameObject != null) yellowMusicNotes[currentDestroyIndex].gameObject.SetActive(false);
+        musicNotes[currentDestroyIndex].gameObject.SetActive(false);
+
+        if (hit.noteType == NoteType.Switch)
+        {
+            teslaCoilManager.OnSwitchAttractor();
+            player.OnSwitchAttractor();
+        }
         
         // Score Popup
         float hitOffsetPercentage = Mathf.Abs( (float)(hit.correctTime - timer.GetTimerValue()) ) / (preSpawnTime + destroySpawnTime); 
@@ -189,9 +198,9 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
         currentDestroyIndex++;
     }
 
-    private void OnMissMusicNote(Vector3 hitPosition)
+    private void OnMissMusicNote(GameObject attractor)
     {
-        Instantiate(scoreHitValues[^1].prefabs, hitPosition, Quaternion.identity, transform);
+        Instantiate(scoreHitValues[^1].prefabs, attractor.transform.position, Quaternion.identity, transform);
     }    
     
     
