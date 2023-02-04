@@ -635,11 +635,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4916294654677215292, guid: 17fb36cd22f317d4894c143b01bc2ed7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.277629
+      value: 0.38
       objectReference: {fileID: 0}
     - target: {fileID: 4916294654677215292, guid: 17fb36cd22f317d4894c143b01bc2ed7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.08937989
+      value: -4.33
       objectReference: {fileID: 0}
     - target: {fileID: 4916294654677215292, guid: 17fb36cd22f317d4894c143b01bc2ed7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1710,7 +1710,7 @@ MonoBehaviour:
   initWaitTime: 3
   endWaitTime: 0
   deltaAccuracyTime: 0
-  preSpawnTime: 1.25
+  preSpawnTime: 1.5
   destroySpawnTime: 0.25
   yellowMusicNotes:
   - gameObject: {fileID: 1817334610}
