@@ -54,7 +54,7 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     private class ScoreHitValue
     {
         public GameObject prefabs;
-        public float timeOffsetPercentage;
+        [Range(0f,1f)] public float timeOffsetPercentage;
         public float value;
     }
 
