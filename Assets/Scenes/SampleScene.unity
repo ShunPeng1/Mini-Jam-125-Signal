@@ -1709,8 +1709,8 @@ MonoBehaviour:
   initWaitTime: 3
   endWaitTime: 0
   deltaAccuracyTime: 0
-  preSpawnTime: 1
-  destroySpawnTime: 0.5
+  preSpawnTime: 1.25
+  destroySpawnTime: 0.25
   yellowMusicNotes:
   - gameObject: {fileID: 1817334610}
     noteType: 2
