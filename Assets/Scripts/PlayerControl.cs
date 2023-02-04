@@ -26,6 +26,7 @@ public class PlayerControl : MonoBehaviour
     
     [Header("Mouse")] 
     [SerializeField, Range(0.01f, 2f)]private float mouseSensitivity = 1f;
+    [SerializeField] private Vector3 mouseMovementConstraint;
 
     [Header("Distance From Center")]
     private Vector3 centerPosition;
@@ -72,8 +73,11 @@ public class PlayerControl : MonoBehaviour
         //mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         mousePosition += new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0) * mouseSensitivity;
-        
+
+        mousePosition.x = Mathf.Clamp(mousePosition.x, -mouseMovementConstraint.x/2f, mouseMovementConstraint.x/2f);
+        mousePosition.y = Mathf.Clamp(mousePosition.y, -mouseMovementConstraint.y/2f, mouseMovementConstraint.y/2f);
         mousePosition.z = (transform.position - centerPosition).z;
+        
         float deltaAngle = Vector3.SignedAngle((currentAttractor.transform.position - centerPosition).normalized , (mousePosition - centerPosition).normalized  , Vector3.forward);
         
         
@@ -85,10 +89,10 @@ public class PlayerControl : MonoBehaviour
 
 
         currentAttractor.transform.position = new Vector3(x, y, 0);
-        currentAttractor.transform.rotation = Quaternion.Euler(0, 0, currentZAngleDegree);
+        //currentAttractor.transform.rotation = Quaternion.Euler(0, 0, currentZAngleDegree);
         
         waitAttractor.transform.position = new Vector3(-x, -y, 0);
-        waitAttractor.transform.rotation = Quaternion.Euler(0, 0,180f+ currentZAngleDegree);
+        //waitAttractor.transform.rotation = Quaternion.Euler(0, 0,180f+ currentZAngleDegree);
 
         //yellowRigidbody.MovePosition(new Vector3(x, y, 0));
         //yellowRigidbody.MoveRotation(currentZAngleDegree);
@@ -117,6 +121,8 @@ public class PlayerControl : MonoBehaviour
     {
         Gizmos.DrawWireSphere(currentAttractor.transform.position, yellowRadius);
         Gizmos.DrawWireSphere(waitAttractor.transform.position, blueRadius);
+        
+        Gizmos.DrawWireCube(centerPosition,mouseMovementConstraint);
     }
 
 }
