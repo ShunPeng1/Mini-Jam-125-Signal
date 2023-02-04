@@ -108,33 +108,27 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     void FixedUpdate()
     {
         
-        if (currentDestroyIndex >= yellowMusicNotes.Count)
+        while (currentDestroyIndex < yellowMusicNotes.Count &&  yellowMusicNotes[currentDestroyIndex].correctTime + destroySpawnTime < timer.GetTimerValue())
         {
-            return;
-        }
-        
-        MusicNote currentDestroyMusicNote = yellowMusicNotes[currentDestroyIndex];
-        if (currentDestroyMusicNote.correctTime + destroySpawnTime < timer.GetTimerValue())
-        {
-            yellowMusicNotes[currentDestroyIndex].gameObject.SetActive(false);
+            //Debug.Log("DESPAWN");
+            MusicNote currentDestroyMusicNote = yellowMusicNotes[currentDestroyIndex];
+
+            if(currentDestroyMusicNote.gameObject != null) currentDestroyMusicNote.gameObject.SetActive(false);
             //Destroy(currentDestroyMusicNote.gameObject);
             currentDestroyIndex++;
-        }
-     
-        
-        if (currentSpawnIndex >= yellowMusicNotes.Count)
-        {
-            return;
-        }
-        
-        MusicNote currentSpawnMusicNote = yellowMusicNotes[currentSpawnIndex];
-        if (currentSpawnMusicNote.correctTime - preSpawnTime < timer.GetTimerValue())
-        {
-            //yellowMusicNotes[currentSpawnIndex].gameObject = Instantiate(AssetManager.Instance.hitNodePrefab, currentSpawnMusicNote.position, Quaternion.identity, transform);
-            yellowMusicNotes[currentSpawnIndex].gameObject.SetActive(true);
             
+        }
+        
+        while (currentSpawnIndex < yellowMusicNotes.Count &&  yellowMusicNotes[currentSpawnIndex].correctTime - preSpawnTime < timer.GetTimerValue())
+        {
+            //Debug.Log("SPAWN");
+            MusicNote currentSpawnMusicNote = yellowMusicNotes[currentSpawnIndex];
+
+            if(currentSpawnMusicNote.gameObject != null) currentSpawnMusicNote.gameObject.SetActive(true);
+            //Destroy(currentDestroyMusicNote.gameObject);
             currentSpawnIndex++;
         }
+        
         
     }
 
@@ -158,7 +152,7 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
 
     private void OnHitMusicNote()
     {
-        yellowMusicNotes[currentDestroyIndex].gameObject.SetActive(false);
+        if(yellowMusicNotes[currentDestroyIndex].gameObject != null) yellowMusicNotes[currentDestroyIndex].gameObject.SetActive(false);
         //Destroy(yellowMusicNotes[currentDestroyIndex].gameObject);
         currentDestroyIndex++;
         Debug.Log("Hit music note");
