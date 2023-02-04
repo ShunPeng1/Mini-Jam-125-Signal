@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class HitNote : MonoBehaviour
 {
-    
-    private void OnMouseDown()
+    private void OnEnable()
     {
-        
+        throw new NotImplementedException();
     }
-    
-    
-    
+
+    private void OnDisable()
+    {
+        throw new NotImplementedException();
+    }
 }

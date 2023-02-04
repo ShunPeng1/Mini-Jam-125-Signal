@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
 {
-    
-    
     
     [Header("Attractor")] 
     [SerializeField] private GameObject yellowAttractor;
@@ -15,12 +14,12 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private GameObject blue1Attractor;
     [SerializeField] private GameObject blue2Attractor;
     
-    [Header("Circle Collider")] 
-    private CircleCollider2D yellowCollider;
-    private CircleCollider2D blue0Collider;
-    private CircleCollider2D blue1Collider;
-    private CircleCollider2D blue2Collider;
 
+    [Header("Collider Radius")]
+    [SerializeField] private float yellowRadius;
+    [SerializeField] private float blueRadius;
+    
+    
     [Header("Rigidbody")]
     private Rigidbody2D yellowRigidbody;
     private Rigidbody2D blueClusterRigidbody;
@@ -45,13 +44,6 @@ public class PlayerControl : MonoBehaviour
 
     void InitGetAttractorsComponent()
     {
-        
-        yellowCollider = yellowAttractor.GetComponent<CircleCollider2D>();
-        blue0Collider = blue0Attractor.GetComponent<CircleCollider2D>();
-        blue1Collider = blue1Attractor.GetComponent<CircleCollider2D>();
-        blue2Collider = blue2Attractor.GetComponent<CircleCollider2D>();
-
-        
         yellowRigidbody = yellowAttractor.GetComponent<Rigidbody2D>();
         blueClusterRigidbody = blueCluster.GetComponent<Rigidbody2D>();
 
@@ -63,17 +55,22 @@ public class PlayerControl : MonoBehaviour
         mousePosition.z = (transform.position - centerPosition).z;
 
         MousePointerMovement(mousePosition);
+        
+        
+        
+    }
 
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.C) )
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.X) )
         {
             OnYellowClick();
         }
 
-        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.X))
+        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.C))
         {
             OnBlueClick();
         }
-        
     }
 
     private void MousePointerMovement(Vector3 mousePosition)
@@ -104,11 +101,10 @@ public class PlayerControl : MonoBehaviour
 
     private void OnYellowClick()
     {
-        //Debug.Log("right Click ");
-        Collider2D [] hits= Physics2D.OverlapCircleAll(yellowAttractor.transform.position, yellowCollider.radius, yellowNoteLayerMask);
-        Debug.Log( yellowAttractor.transform.position +" "+ yellowCollider.radius.ToString()+ " "+ hits.ToString());
-       
-        //MusicNoteManager.Instance.CheckHitMusicNote(hits);
+        Collider2D [] hits= Physics2D.OverlapCircleAll(yellowAttractor.transform.position, yellowRadius, yellowNoteLayerMask);
+        
+        
+        MusicNoteManager.Instance.CheckHitYellowMusicNote(hits);
         
     }
 
@@ -116,5 +112,13 @@ public class PlayerControl : MonoBehaviour
     {
         
     }
-    
+
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(yellowAttractor.transform.position, yellowRadius);
+        Gizmos.DrawWireSphere(blue0Attractor.transform.position, blueRadius);
+        Gizmos.DrawWireSphere(blue1Attractor.transform.position, blueRadius);
+        Gizmos.DrawWireSphere(blue2Attractor.transform.position, blueRadius);
+    }
+
 }
