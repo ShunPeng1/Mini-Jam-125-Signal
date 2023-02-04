@@ -147,22 +147,26 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
     {
         if (currentDestroyIndex >= yellowMusicNotes.Count) return;
         
-
         GameObject tobeCheckNoteTimer = yellowMusicNotes[currentDestroyIndex].gameObject;
-        while (tobeCheckNoteTimer.gameObject == null)
+        while ( currentDestroyIndex < yellowMusicNotes.Count &&  tobeCheckNoteTimer.gameObject == null)
         {
             currentDestroyIndex++;
+            tobeCheckNoteTimer = yellowMusicNotes[currentDestroyIndex].gameObject;
         }
+        
+        if (currentDestroyIndex >= yellowMusicNotes.Count) return;
+        
         
         foreach (var hit in hits)
         {
             if (tobeCheckNoteTimer != hit.gameObject) continue;
-            OnHitMusicNote(yellowMusicNotes[currentDestroyIndex]);
             
-            return true;
+            OnHitMusicNote(yellowMusicNotes[currentDestroyIndex]);
+            return;
         }
         
-        return false;
+        OnMissMusicNote(hitPosition);
+        
     }
 
     private void OnHitMusicNote(MusicNote hit)
@@ -185,9 +189,9 @@ public class MusicNoteManager : SingletonMonoBehaviour<MusicNoteManager>
         currentDestroyIndex++;
     }
 
-    private void OnMissMusicNote()
+    private void OnMissMusicNote(Vector3 hitPosition)
     {
-        
+        Instantiate(scoreHitValues[^1].prefabs, hitPosition, Quaternion.identity, transform);
     }    
     
     

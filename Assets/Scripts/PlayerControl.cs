@@ -51,17 +51,17 @@ public class PlayerControl : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition.z = (transform.position - centerPosition).z;
-
-        MousePointerMovement(mousePosition);
-        
         
         
     }
 
     private void Update()
     {
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = (transform.position - centerPosition).z;
+
+        MousePointerMovement(mousePosition);
+        
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.X) )
         {
             OnYellowClick();
@@ -84,18 +84,19 @@ public class PlayerControl : MonoBehaviour
         
         float x = mousePosition.x;
         float y = mousePosition.y;
-        
-        
-        //transform.rotation = Quaternion.Euler(0,0, currentZAngleDegree);
 
-        //yellowAttractor.transform.position = new Vector3(x, y, 0);
-        //blueCluster.transform.position = new Vector3(-x, -y, 0);
 
-        yellowRigidbody.MovePosition(new Vector3(x, y, 0));
-        yellowRigidbody.MoveRotation(currentZAngleDegree);
+        yellowAttractor.transform.position = new Vector3(x, y, 0);
+        yellowAttractor.transform.rotation = Quaternion.Euler(0, 0, currentZAngleDegree);
         
-        blueClusterRigidbody.MovePosition(new Vector3(-x, -y, 0));
-        blueClusterRigidbody.MoveRotation(currentZAngleDegree + 180f);
+        blueCluster.transform.position = new Vector3(-x, -y, 0);
+        blueCluster.transform.rotation = Quaternion.Euler(0, 0,180f+ currentZAngleDegree);
+
+        //yellowRigidbody.MovePosition(new Vector3(x, y, 0));
+        //yellowRigidbody.MoveRotation(currentZAngleDegree);
+        
+        //blueClusterRigidbody.MovePosition(new Vector3(-x, -y, 0));
+        //blueClusterRigidbody.MoveRotation(currentZAngleDegree + 180f);
         
     }
 
