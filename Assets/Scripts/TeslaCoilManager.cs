@@ -24,7 +24,9 @@ public class TeslaCoilManager : MonoBehaviour
         blueLightningBolt.StartPosition = blueCoil.transform.position;
         blueLightningBolt.EndPosition = blueAttractor.transform.position;
         
-        OnSwitchAttractor();
+        //OnSwitchAttractor();
+        yellowLightningBolt.gameObject.SetActive(true);
+        blueLightningBolt.gameObject.SetActive(true);
     }
 
     
